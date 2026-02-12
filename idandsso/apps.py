@@ -77,19 +77,19 @@ class IdAndSsoConfig(AppConfig):
             logger.error("SITE_URL or SITEURL is NOT configured!")
 
         for configured_setting in [
-            "SOCIALACCOUNT_LOGOUT_REDIRECT_URL",
-            "LOGIN_REDIRECT_URL",
-            "LOGIN_URL",
-            "IDANDSSO_PROVIDER_ID",
-            "IDANDSSO_CONNECTOR_NAME",
-            "IDANDSSO_PROVIDER_REALM",
-            "IDANDSSO_PROVIDER_HOST",
-            "IDANDSSO_PROVIDER_ROOT",
             "IDANDSSO_CLIENT_ID",
             "IDANDSSO_CLIENT_SECRET",
+            "IDANDSSO_CONNECTOR_NAME",
             "IDANDSSO_GROUP_MAP",
             "IDANDSSO_GROUP_NAME_DJANGO_STAFF",
             "IDANDSSO_GROUP_NAME_DJANGO_SUPERUSER",
+            "IDANDSSO_PROVIDER_HOST",
+            "IDANDSSO_PROVIDER_ID",
+            "IDANDSSO_PROVIDER_REALM",
+            "IDANDSSO_PROVIDER_ROOT",
+            "LOGIN_REDIRECT_URL",
+            "LOGIN_URL",
+            "SOCIALACCOUNT_LOGOUT_REDIRECT_URL",
         ]:
             if not getattr(settings, configured_setting, None):
                 logger.error(f"{configured_setting} MUST BE CONFIGURED!")
