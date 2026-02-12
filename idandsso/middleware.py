@@ -53,7 +53,7 @@ class KeycloakSilentSSOMiddleware:
             logger.debug("deleting cookie")
             response.delete_cookie("sso_hint", domain=sso_cookie_domain(), path="/")
 
-        if request.user.is_authenticated:
+        elif request.user.is_authenticated:
             sso_cookie_max_age = getattr(settings, "SESSION_COOKIE_AGE", 3600)
 
             if "text/html" in request.META.get("HTTP_ACCEPT", ""):
