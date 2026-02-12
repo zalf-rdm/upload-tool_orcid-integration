@@ -77,6 +77,7 @@ class IdAndSsoConfig(AppConfig):
             logger.error("SITE_URL or SITEURL is NOT configured!")
 
         for configured_setting in [
+            "GEONODE_API_TIMEOUT",
             "IDANDSSO_CLIENT_ID",
             "IDANDSSO_CLIENT_SECRET",
             "IDANDSSO_CONNECTOR_NAME",
