@@ -28,45 +28,26 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+from urllib.parse import urlparse
+
 from django.conf import settings
 from loguru import logger
 
-from .utils import sso_cookie_domain
 
-
-class KeycloakSilentSSOMiddleware:
+def sso_cookie_domain():
     """
-    configure using upload_manager.middleware.KeycloakSilentSSOMiddleware
+    django.conf.settings.SITE_URL and .SITEURL are not standardized, hence both are possible:
+
+    https://docs.djangoproject.com/en/4.2/ref/settings/
+
+    Extracts the SSO cookie domain from the site's URL, defaulting to localhost
     """
 
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-
-        if (
-            request.method == "POST"
-            and "/accounts/logout/" in request.path
-            and request.COOKIES.get("sso_hint") == "true"
-        ):
-            logger.debug("deleting cookie")
-            response.delete_cookie("sso_hint", domain=sso_cookie_domain(), path="/")
-
-        if request.user.is_authenticated:
-            sso_cookie_max_age = getattr(settings, "SESSION_COOKIE_AGE", 3600)
-
-            if "text/html" in request.META.get("HTTP_ACCEPT", ""):
-                logger.debug("refreshing sso_hint cookie")
-                response.set_cookie(
-                    "sso_hint",
-                    "true",
-                    domain=sso_cookie_domain(),
-                    max_age=sso_cookie_max_age,
-                    samesite="Lax",
-                    path="/",
-                    secure=request.is_secure(),
-                    httponly=False,
-                )
-
-        return response
+    site_url = (
+        settings.SITE_URL
+        if getattr(settings, "SITE_URL", False)
+        else getattr(settings, "SITEURL", "localhost")
+    )
+    sso_cookie_domain = f".{'.'.join(urlparse(site_url).netloc.split(':')[0].split('.')[1:])}"
+    logger.debug(f"Domain for cookie: '{sso_cookie_domain}'")
+    return sso_cookie_domain

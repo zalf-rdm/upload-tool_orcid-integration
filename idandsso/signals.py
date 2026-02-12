@@ -35,7 +35,6 @@
 #
 #       https://docs.allauth.org/en/dev/socialaccount/signals.html
 #
-from urllib.parse import urlparse
 
 from allauth.account.signals import user_logged_in
 from allauth.socialaccount.models import SocialAccount
@@ -57,6 +56,7 @@ from .keycloak import (
     add_user_to_keycloak_group,
     remove_user_from_keycloak_group,
 )
+from .utils import sso_cookie_domain
 
 
 @receiver(signal=user_logged_in)
@@ -99,7 +99,7 @@ def handle_user_logged_in(sender, request, response, user, **kwargs):
     #   set cookie for single sign on
     #
     if response and "sso_hint" not in request.COOKIES:
-        domain = f".{'.'.join(urlparse(settings.SITE_URL).netloc.split(':')[0].split('.')[1:])}"
+        domain = sso_cookie_domain()
         max_age = getattr(settings, "SESSION_COOKIE_AGE", 3600)
         logger.debug(f"Domain for cookie: '{domain}'")
         response.set_cookie(

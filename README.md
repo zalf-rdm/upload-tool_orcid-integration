@@ -235,6 +235,10 @@ IDANDSSO_GROUP_NAME_DJANGO_SUPERUSER = os.environ.get(
 )
 ```
 
+Other used settings:
+
+* `SITE_URL|SITEURL` - used to identify the domain for the SSO cookie.
+
 ## Templates
 
 Some features provided require certain templates and blocks.

@@ -73,6 +73,9 @@ class IdAndSsoConfig(AppConfig):
             if not getattr(settings, boolean_setting, False):
                 logger.error(f"{boolean_setting} MUST BE TRUE!")
 
+        if not getattr(settings, "SITE_URL", False) or not getattr(settings, "SITEURL", False):
+            logger.error("SITE_URL or SITEURL is NOT configured!")
+
         for configured_setting in [
             "SOCIALACCOUNT_LOGOUT_REDIRECT_URL",
             "LOGIN_REDIRECT_URL",
