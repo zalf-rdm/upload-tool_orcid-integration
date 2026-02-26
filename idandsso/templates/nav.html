@@ -5,6 +5,7 @@
 {% load development_tags %}
 {% load idandsso %}
 {% is_debug as debug_mode %}
+{% idandsso_provider_id as provider_id %}
 
 {% block username %}
     <li class="nav-item text-white d-none d-lg-block">
@@ -18,7 +19,7 @@
 {% block navigation_login %}
     <!-- Login & Signup (not authenticated) id&sso template -->
     <li class="nav-item">
-        <form method="POST" action="{% provider_login_url idandsso_provider_id %}" novalidate="novalidate">
+        <form method="POST" action="{% provider_login_url provider_id %}" novalidate="novalidate">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-light btn-sm">{% trans 'Register/Login via ORCID' %}</button>
         </form>

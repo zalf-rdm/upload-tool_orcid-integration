@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% load socialaccount %}
 {% load development_tags %}
+{% load idandsso %}
 {% load i18n %}
+{% idandsso_provider_id as provider_id %}
 
 {% block additional_scripts %}
   {{ block.super }}
   {% if not user.is_authenticated %}
-    <form id="sso-silent-login-form" method="POST" action="{% provider_login_url socialaccount_provider_id %}" style="display:none;">
+    <form id="sso-silent-login-form" method="POST" action="{% provider_login_url provider_id %}" style="display:none;">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.path }}" />
       <input type="hidden" name="prompt" value="none" />
