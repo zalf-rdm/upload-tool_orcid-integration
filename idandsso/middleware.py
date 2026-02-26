@@ -36,7 +36,10 @@ from .utils import sso_cookie_domain
 
 class KeycloakSilentSSOMiddleware:
     """
-    configure using upload_manager.middleware.KeycloakSilentSSOMiddleware
+    Maintains a hint cookie, that indicates that SSO is possible
+
+    Add idandsso.middleware.KeycloakSilentSSOMiddleware to MIDDLEWARE
+    before allauth.account.middleware.AccountMiddleware
     """
 
     def __init__(self, get_response):
