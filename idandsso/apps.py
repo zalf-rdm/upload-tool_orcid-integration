@@ -58,9 +58,20 @@ class IdAndSsoConfig(AppConfig):
         configured_account_adapter = getattr(settings, "ACCOUNT_ADAPTER", None)
 
         if not configured_account_adapter == qualified_adapter_class_name:
-            logger.error(
-                f"ACCOUNT_ADAPTER='{configured_account_adapter}' != '{qualified_adapter_class_name}'"
-            )
+
+            def is_subclass(name, cls):
+                return name in [c.__name__ for c in cls.__subclasses__()] or any(
+                    is_subclass(name, s) for s in cls.__subclasses__()
+                )
+
+            if is_subclass(configured_account_adapter, KeycloakOrcidAccountAdapter):
+                logger.info(
+                    f"ACCOUNT_ADAPTER '{configured_account_adapter}' identified as subclass of '{qualified_adapter_class_name}'"
+                )
+            else:
+                logger.error(
+                    f"ACCOUNT_ADAPTER='{configured_account_adapter}' != '{qualified_adapter_class_name}'"
+                )
 
         email_verification = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION", "not-correct")
         if email_verification != "none":
